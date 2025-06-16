@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import sqlite3
+#import sqlite3
+import psycopg2
+import psycopg2.extras
+
 import os
+DATABASE_URL = os.environ.get("DATABASE_URL")  # sera défini via Render
+
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -26,9 +31,10 @@ def format_duree(delta):
 
 def get_chambres():
     now = datetime.now()
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
     cursor.execute("SELECT * FROM chambres")
     rows = cursor.fetchall()
     conn.close()
@@ -82,9 +88,10 @@ def index():
 
 @app.route('/reserver/<int:id>', methods=['GET', 'POST'])
 def reserver(id):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+
 
     if request.method == 'POST':
         client = request.form['client']
@@ -110,8 +117,11 @@ def reserver(id):
 
 @app.route('/liberer/<int:id>', methods=['POST'])
 def liberer(id):
-    conn = sqlite3.connect(DB_PATH)
+
+
+    conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
+
     cursor.execute('''
         UPDATE chambres SET
             etat = 'libre',
@@ -119,8 +129,9 @@ def liberer(id):
             datetime_debut = NULL,
             datetime_fin = NULL,
             observations = NULL
-        WHERE id = ?
+        WHERE id = %s
     ''', (id,))
+
     conn.commit()
     conn.close()
     flash(f"✅ Chambre {id} libérée.")
@@ -156,18 +167,21 @@ def reservation_rapide(id):
         flash("❌ Pour cet horaire, utilisez le bouton 'Réserver' classique.")
         return redirect(url_for('index'))
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
+
     cursor.execute('''
         UPDATE chambres SET
-            client = ?,
-            datetime_debut = ?,
-            datetime_fin = ?,
-            etat = ?
-        WHERE id = ?
+            client = %s,
+            datetime_debut = %s,
+            datetime_fin = %s,
+            etat = %s
+        WHERE id = %s
     ''', (client, datetime_debut_str, datetime_fin_str, etat, id))
+
     conn.commit()
     conn.close()
+
 
     flash(f"✅ Réservation rapide enregistrée ({etat}).")
     return redirect(url_for('index'))
