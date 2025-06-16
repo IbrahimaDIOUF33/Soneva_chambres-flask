@@ -1,19 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-#import sqlite3
 import psycopg2
 import psycopg2.extras
-
 import os
-DATABASE_URL = os.environ.get("DATABASE_URL")  # sera défini via Render
-
 from datetime import datetime, timedelta
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 app = Flask(__name__)
 app.secret_key = "secret123"
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "base.db")
-
 
 ETAT_LIBELLES = {
     "libre": "Libre",
@@ -21,6 +15,30 @@ ETAT_LIBELLES = {
     "occupee": "Occupée"
 }
 
+def init_db():
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS chambres (
+        id SERIAL PRIMARY KEY,
+        numero TEXT NOT NULL,
+        etat TEXT CHECK(etat IN ('libre', 'reservee', 'occupee')) NOT NULL DEFAULT 'libre',
+        client TEXT,
+        datetime_debut TEXT,
+        datetime_fin TEXT,
+        observations TEXT
+    )
+    ''')
+
+    cursor.execute("SELECT COUNT(*) FROM chambres")
+    count = cursor.fetchone()[0]
+    if count == 0:
+        for i in range(1, 11):
+            cursor.execute("INSERT INTO chambres (numero, etat) VALUES (%s, 'libre')", (f"{100+i}",))
+
+    conn.commit()
+    conn.close()
 
 def format_duree(delta):
     total_seconds = int(delta.total_seconds())
@@ -28,13 +46,10 @@ def format_duree(delta):
     minutes = (total_seconds % 3600) // 60
     return f"{heures}h{minutes:02d}"
 
-
 def get_chambres():
     now = datetime.now()
-
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
     cursor.execute("SELECT * FROM chambres")
     rows = cursor.fetchall()
     conn.close()
@@ -79,19 +94,15 @@ def get_chambres():
         chambres.append(c)
     return chambres
 
-
 @app.route('/')
 def index():
     chambres = get_chambres()
     return render_template('index.html', chambres=chambres)
 
-
 @app.route('/reserver/<int:id>', methods=['GET', 'POST'])
 def reserver(id):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-
 
     if request.method == 'POST':
         client = request.form['client']
@@ -101,24 +112,22 @@ def reserver(id):
         observations = request.form.get('observations', '')
 
         cursor.execute('''
-            UPDATE chambres SET client = ?, datetime_debut = ?, datetime_fin = ?, etat = ?, observations = ?
-            WHERE id = ?
+            UPDATE chambres SET client = %s, datetime_debut = %s, datetime_fin = %s, etat = %s, observations = %s
+            WHERE id = %s
         ''', (client, debut, fin, etat, observations, id))
+
         conn.commit()
-        flash("✅ Réservation enregistrée avec succès.")
         conn.close()
+        flash("✅ Réservation enregistrée avec succès.")
         return redirect(url_for('index'))
 
-    cursor.execute("SELECT * FROM chambres WHERE id = ?", (id,))
+    cursor.execute("SELECT * FROM chambres WHERE id = %s", (id,))
     chambre = cursor.fetchone()
     conn.close()
     return render_template("reservation.html", chambre=chambre)
 
-
 @app.route('/liberer/<int:id>', methods=['POST'])
 def liberer(id):
-
-
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
 
@@ -136,7 +145,6 @@ def liberer(id):
     conn.close()
     flash(f"✅ Chambre {id} libérée.")
     return redirect(url_for('index'))
-
 
 @app.route('/reservation-rapide/<int:id>', methods=['POST'])
 def reservation_rapide(id):
@@ -182,10 +190,9 @@ def reservation_rapide(id):
     conn.commit()
     conn.close()
 
-
     flash(f"✅ Réservation rapide enregistrée ({etat}).")
     return redirect(url_for('index'))
 
-
 if __name__ == '__main__':
+    init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)
