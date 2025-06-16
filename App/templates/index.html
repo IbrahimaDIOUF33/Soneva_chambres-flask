@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des chambres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+    <meta name="theme-color" content="#008080">
+
+</head>
+<body>
+    <h1>Chambres</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li style="color: {% if '✅' in message %}green{% else %}red{% endif %};">
+            {{ message }}
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <table>
+        <tr>
+            <th>Numéro</th>
+            <th>État</th>
+            <th>Client</th>
+            <th>Début</th>
+            <th>Fin</th>
+            <th>Actions</th>
+            <th>Observations</th>
+        </tr>
+        {% for chambre in chambres %}
+        <tr style="background-color: {{ chambre.status_color }};">
+            <td>{{ chambre.numero }}</td>
+            <td>{{ chambre.etat_libelle }}</td>
+            <td>{{ chambre.client or '' }}</td>
+            <td>{{ chambre.debut_affichage }}</td>
+            <td>{{ chambre.fin_affichage }}</td>
+            <td>
+
+                <a href="{{ url_for('reserver', id=chambre.id) }}">
+                    {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
+                </a><br>
+
+                {% if chambre.etat in ['reservee', 'occupee'] %}
+                    <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
+                    </form>
+                {% endif %}
+
+                {% if chambre.etat == 'libre' %}
+                    <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}" class="form-rapide">
+                        <input type="text" name="client" placeholder="Nom" required>
+                        <input type="time" name="heure_debut" required min="06:00" max="23:59">
+                        <input type="time" name="heure_fin" required min="06:00" max="23:59">
+                        <button type="submit">OK</button>
+                    </form>
+                {% endif %}
+
+                {% if chambre.temps_restant %}
+                    <div class="temps">⏳ {{ chambre.temps_restant }} restantes</div>
+                {% endif %}
+
+                {% if chambre.depassé %}
+                    <div class="depasser">⚠️ Dépassé</div>
+                {% endif %}
+
+            </td>
+            <td>{{ chambre.observations or '' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

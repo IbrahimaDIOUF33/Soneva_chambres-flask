@@ -1,0 +1,84 @@
+body {
+    font-family: sans-serif;
+    padding: 10px;
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+td, th {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+.form-rapide {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.form-rapide input,
+.form-rapide button {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+    padding: 6px;
+}
+
+.form-rapide button {
+    cursor: pointer;
+}
+
+@media (min-width: 600px) {
+    .form-rapide {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .form-rapide input[type="text"] {
+        width: 130px;
+    }
+
+    .form-rapide input[type="time"] {
+        width: 60px;
+    }
+
+    .form-rapide button {
+        width: auto;
+    }
+}
+
+.temps {
+    font-size: 0.85em;
+    color: navy;
+    margin-top: 4px;
+}
+
+.depasser {
+    font-size: 0.85em;
+    font-weight: bold;
+    color: red;
+    background: #ffe0e0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+}
+
+/* Couleurs de statut pour une meilleure distinction */
+tr[style*="lightgreen"] td { background-color: #d4f4d4 !important; }
+tr[style*="orange"] td     { background-color: #ffe6cc !important; }
+tr[style*="lightblue"] td  { background-color: #d6eaff !important; }
+tr[style*="gray"] td,
+tr[style*="lightgray"] td  { background-color: #efefef !important; }
+tr[style*="red"] td        { background-color: #ffcccc !important; }

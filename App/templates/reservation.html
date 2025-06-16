@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réserver la chambre {{ chambre.numero }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Réservation - Chambre {{ chambre.numero }}</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li style="color: {% if '✅' in message %}green{% else %}red{% endif %};">
+            {{ message }}
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="client">Nom du client :</label><br>
+        <input type="text" name="client" id="client" value="{{ chambre.client or '' }}" required><br><br>
+
+        <label for="datetime_debut">Date et heure d’entrée :</label><br>
+        <input type="datetime-local" name="datetime_debut" id="datetime_debut" 
+               value="{{ chambre.datetime_debut|replace(' ', 'T') if chambre.datetime_debut else '' }}" required><br><br>
+
+        <label for="datetime_fin">Date et heure de sortie :</label><br>
+        <input type="datetime-local" name="datetime_fin" id="datetime_fin" 
+               value="{{ chambre.datetime_fin|replace(' ', 'T') if chambre.datetime_fin else '' }}" required><br><br>
+
+        <label for="etat">État :</label><br>
+        <select name="etat" id="etat">
+            {% if chambre.etat != 'libre' %}
+                <option value="occupee" {% if chambre.etat == 'occupee' %}selected{% endif %}>Occupée</option>
+            {% endif %}
+            <option value="reservee" {% if chambre.etat == 'reservee' or chambre.etat == 'libre' %}selected{% endif %}>Réservée</option>
+        </select><br><br>
+
+        <label for="observations">Observations :</label><br>
+        <textarea name="observations" id="observations" rows="4" style="width:100%;">{{ chambre.observations or '' }}</textarea><br><br>
+
+        <button type="submit">Enregistrer</button>
+        <a href="{{ url_for('index') }}">Annuler</a>
+    </form>
+</body>
+</html>
