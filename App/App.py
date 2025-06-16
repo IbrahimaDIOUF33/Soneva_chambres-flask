@@ -5,6 +5,9 @@ import os
 from datetime import datetime, timedelta
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("❌ DATABASE_URL non défini. Ce script ne peut être lancé qu'en ligne (Render).")
+
 
 app = Flask(__name__)
 app.secret_key = "secret123"
