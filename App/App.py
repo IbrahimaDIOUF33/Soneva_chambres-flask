@@ -53,7 +53,9 @@ def get_chambres():
     now = datetime.now()
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cursor.execute("SELECT * FROM chambres")
+    #cursor.execute("SELECT * FROM chambres")
+    cursor.execute("SELECT * FROM chambres ORDER BY numero ASC")
+
     rows = cursor.fetchall()
     conn.close()
 
