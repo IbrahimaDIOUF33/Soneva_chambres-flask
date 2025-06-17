@@ -80,35 +80,35 @@
         {% endfor %}
     </table>
 
-    
-    <div class="cartes-chambres">
-        {% for chambre in chambres %}
-        <div class="carte-chambre" style="background-color: {{ chambre.status_color }};">
-            <strong>Chambre {{ chambre.numero }}</strong><br>
-            État : {{ chambre.etat }}<br>
-            Client : {{ chambre.client or '—' }}<br>
-            Début : {{ chambre.debut_affichage }}<br>
-            Fin : {{ chambre.fin_affichage }}<br>
-            Observations : {{ chambre.observations or '—' }}<br>
+
+    <div class="carte-chambre">
+        <table class="mini-table">
+            <tr><th>Chambre</th><td>{{ chambre.numero }}</td></tr>
+            <tr><th>État</th><td>{{ chambre.etat }}</td></tr>
+            <tr><th>Client</th><td>{{ chambre.client or '—' }}</td></tr>
+            <tr><th>Début</th><td>{{ chambre.debut_affichage }}</td></tr>
+            <tr><th>Fin</th><td>{{ chambre.fin_affichage }}</td></tr>
+            <tr><th>Observations</th><td>{{ chambre.observations or '—' }}</td></tr>
             {% if chambre.temps_restant %}
-                <div class="temps">⏳ {{ chambre.temps_restant }}</div>
+            <tr><th>Temps restant</th><td>{{ chambre.temps_restant }}</td></tr>
             {% endif %}
             {% if chambre.depassé %}
-                <div class="depasser">⚠️ Dépassé</div>
+            <tr><th colspan="2" class="depasser">⚠️ Dépassé</th></tr>
             {% endif %}
-            <div style="margin-top: 5px;">
-                <a href="{{ url_for('reserver', id=chambre.id) }}">Réserver</a><br>
-                {% if chambre.etat in ['reservée', 'occupée'] %}
-                <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
-                    <button type="submit">Libérer</button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
+            <tr>
+                <td colspan="2">
+                    <a href="{{ url_for('reserver', id=chambre.id) }}">Réserver</a>
+                    {% if chambre.etat in ['reservée', 'occupée'] %}
+                        <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
+                            <button type="submit">Libérer</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
     </div>
 
-
+    
 
     <script>
         setInterval(function() {

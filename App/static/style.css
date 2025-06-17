@@ -75,6 +75,34 @@ th {
     margin-top: 4px;
 }
 
+
+/* Masque l'affichage mobile par défaut */
+.cartes-chambres {
+    display: none;
+}
+
+/* Style des cartes chambre */
+.carte-chambre {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 0.95em;
+}
+
+/* Sur petit écran : masque le tableau, affiche les cartes */
+@media (max-width: 700px) {
+    table {
+        display: none;
+    }
+
+    .cartes-chambres {
+        display: block;
+    }
+}
+
+
+
 /* Couleurs de statut pour une meilleure distinction */
 tr[style*="lightgreen"] td { background-color: #d4f4d4 !important; }
 tr[style*="orange"] td     { background-color: #ffe6cc !important; }
@@ -82,3 +110,66 @@ tr[style*="lightblue"] td  { background-color: #d6eaff !important; }
 tr[style*="gray"] td,
 tr[style*="lightgray"] td  { background-color: #efefef !important; }
 tr[style*="red"] td        { background-color: #ffcccc !important; }
+
+form input,
+form select,
+form textarea,
+form button {
+    font-size: 1em;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+/* Pour petits écrans */
+@media (max-width: 600px) {
+    form {
+        padding: 0 10px;
+    }
+}
+
+/* Conteneur carte chambre mobile */
+.carte-chambre {
+    margin: 10px 0;
+    padding: 0;
+    border: 2px solid #333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Tableau mini structuré */
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mini-table th {
+    text-align: left;
+    background-color: #f0f0f0;
+    width: 40%;
+    padding: 6px;
+    font-size: 0.95em;
+}
+
+.mini-table td {
+    padding: 6px;
+    font-size: 0.95em;
+}
+
+.mini-table tr:nth-child(even) td {
+    background-color: #fafafa;
+}
+
+@media (min-width: 701px) {
+    .cartes-chambres {
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {
+    table {
+        display: none;
+    }
+}
