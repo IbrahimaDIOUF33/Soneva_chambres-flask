@@ -80,6 +80,36 @@
         {% endfor %}
     </table>
 
+    
+    <div class="cartes-chambres">
+        {% for chambre in chambres %}
+        <div class="carte-chambre" style="background-color: {{ chambre.status_color }};">
+            <strong>Chambre {{ chambre.numero }}</strong><br>
+            État : {{ chambre.etat }}<br>
+            Client : {{ chambre.client or '—' }}<br>
+            Début : {{ chambre.debut_affichage }}<br>
+            Fin : {{ chambre.fin_affichage }}<br>
+            Observations : {{ chambre.observations or '—' }}<br>
+            {% if chambre.temps_restant %}
+                <div class="temps">⏳ {{ chambre.temps_restant }}</div>
+            {% endif %}
+            {% if chambre.depassé %}
+                <div class="depasser">⚠️ Dépassé</div>
+            {% endif %}
+            <div style="margin-top: 5px;">
+                <a href="{{ url_for('reserver', id=chambre.id) }}">Réserver</a><br>
+                {% if chambre.etat in ['reservée', 'occupée'] %}
+                <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
+                    <button type="submit">Libérer</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
     <script>
         setInterval(function() {
             window.location.reload();

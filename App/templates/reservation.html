@@ -4,33 +4,63 @@
     <meta charset="UTF-8">
     <title>Réserver la chambre {{ chambre.numero }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <style>
         .form-container {
             max-width: 500px;
             margin: auto;
+            padding: 10px;
         }
 
         .form-container label {
             font-weight: bold;
+            font-size: 1.1em;
         }
 
         .form-container input,
         .form-container select,
         .form-container textarea,
         .form-container button {
-            font-size: 1em;
+            font-size: 1.05em;
             width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
+            padding: 10px;
+            margin-bottom: 14px;
             box-sizing: border-box;
         }
 
+        .form-container button {
+            background-color: #008080;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #006666;
+        }
+
         @media (max-width: 600px) {
+            body {
+                font-size: 1.05em;
+            }
+
             .form-container {
-                padding: 0 10px;
+                padding: 0 15px;
             }
         }
     </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+    <meta name="theme-color" content="#008080">
+
+
+
+
+
 </head>
 <body>
     <h2 style="text-align: center;">Réservation - Chambre {{ chambre.numero }}</h2>
