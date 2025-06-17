@@ -78,13 +78,34 @@
     <!-- Vue mobile : cartes -->
     <div class="cartes-chambres">
         {% for chambre in chambres %}
-            <div class="carte-chambre" style="background-color: {{ chambre.status_color }};">
-            <table class="mini-table">
-                <tr><th>Chambre</th><td>{{ chambre.numero }}</td></tr>
-                <tr><th>État</th><td>{{ chambre.etat_libelle }}</td></tr>
-                <!-- etc. -->
-            </table>
-            </div>
+        <tr class="ligne-mobile" style="background-color: {{ chambre.status_color }};">
+            <td colspan="3">
+                <strong>Chambre {{ chambre.numero }}</strong> - {{ chambre.etat_libelle }}<br>
+                Client : {{ chambre.client or '—' }}<br>
+                Début : {{ chambre.debut_affichage }}<br>
+                Fin : {{ chambre.fin_affichage }}<br>
+
+                {% if chambre.temps_restant %}
+                    ⏳ {{ chambre.temps_restant }}<br>
+                {% endif %}
+                {% if chambre.depassé %}
+                    ⚠️ Dépassé<br>
+                {% endif %}
+
+                <button onclick="toggleDetails({{ chambre.id }})" style="margin-top: 6px;">Détails</button>
+
+                <div id="details-{{ chambre.id }}" class="details-carte" style="display:none; margin-top: 8px;">
+                    <strong>Tarif payé :</strong> {{ chambre.tarif or '—' }}<br>
+                    <strong>Pièce ID :</strong> {{ chambre.identite or '—' }}<br>
+                    <strong>Agent :</strong> {{ chambre.agent or '—' }}<br>
+                    <strong>Observations :</strong> {{ chambre.observations or '—' }}<br><br>
+
+                    <a href="{{ url_for('reserver', id=chambre.id) }}">
+                        <button>Modifier</button>
+                    </a>
+                </div>
+            </td>
+        </tr>
         {% endfor %}
     </div>
 
@@ -93,5 +114,14 @@
             window.location.reload();
         }, 60000); // recharge toutes les 60 secondes
     </script>
+
+    <script>
+    function toggleDetails(id) {
+        const div = document.getElementById('details-' + id);
+        div.style.display = div.style.display === 'none' ? 'block' : 'none';
+    }
+    </script>
+
+
 </body>
 </html>
