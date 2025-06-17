@@ -75,19 +75,17 @@ th {
     margin-top: 4px;
 }
 
-/* Cartes masquées par défaut */
+/* Cartes chambres (mobile) */
 .cartes-chambres {
     display: none;
 }
 
-/* Carte chambre mobile */
 .carte-chambre {
-    margin: 10px 0;
-    padding: 0;
-    border: 1px solid #ccc;
+    margin: 12px 0;
+    padding: 10px;
+    background: #fff;
     border-radius: 6px;
-    overflow: hidden;
-    font-size: 0.95em;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Tableau mini structuré */
@@ -113,24 +111,7 @@ th {
     background-color: #fafafa;
 }
 
-/* Responsive comportement */
-@media (max-width: 700px) {
-    table {
-        display: none;
-    }
-
-    .cartes-chambres {
-        display: block;
-    }
-}
-
-@media (min-width: 701px) {
-    .cartes-chambres {
-        display: none;
-    }
-}
-
-/* Couleurs de statut (tableau uniquement) */
+/* Couleurs de statut (tableau) */
 tr[style*="lightgreen"] td { background-color: #d4f4d4 !important; }
 tr[style*="orange"] td     { background-color: #ffe6cc !important; }
 tr[style*="lightblue"] td  { background-color: #d6eaff !important; }
@@ -138,7 +119,7 @@ tr[style*="gray"] td,
 tr[style*="lightgray"] td  { background-color: #efefef !important; }
 tr[style*="red"] td        { background-color: #ffcccc !important; }
 
-/* Formulaires généraux */
+/* Formulaire général */
 form input,
 form select,
 form textarea,
@@ -154,5 +135,35 @@ form button {
 @media (max-width: 600px) {
     form {
         padding: 0 10px;
+    }
+}
+
+/* Responsive : affichage mobile */
+@media (max-width: 700px) {
+    /* Réduit les colonnes du tableau */
+    td:nth-child(3),
+    td:nth-child(4),
+    td:nth-child(5),
+    td:nth-child(7),
+    th:nth-child(3),
+    th:nth-child(4),
+    th:nth-child(5),
+    th:nth-child(7) {
+        display: none;
+    }
+
+    .cartes-chambres {
+        display: block;
+    }
+
+    .form-rapide {
+        flex-direction: column;
+    }
+}
+
+/* Desktop : masque les cartes */
+@media (min-width: 701px) {
+    .cartes-chambres {
+        display: none;
     }
 }
