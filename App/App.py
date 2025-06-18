@@ -244,6 +244,16 @@ def reservation_rapide(id):
     flash(f"✅ Réservation rapide enregistrée ({etat}).")
     return redirect(url_for('index'))
 
+@app.route('/historique')
+def historique():
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor.execute("SELECT * FROM historique ORDER BY date_enregistrement DESC")
+    historiques = cursor.fetchall()
+    conn.close()
+    return render_template("historique.html", historiques=historiques)
+
+
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)

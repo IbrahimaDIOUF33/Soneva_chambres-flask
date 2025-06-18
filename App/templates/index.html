@@ -10,6 +10,11 @@
     <meta name="theme-color" content="#008080">
 </head>
 <body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}">🏠 Accueil</a>
+        <a href="{{ url_for('historique') }}">📜 Historique</a>
+    </nav>
+
     <h1>Chambres</h1>
 
     {% with messages = get_flashed_messages() %}
