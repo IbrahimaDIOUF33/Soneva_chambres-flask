@@ -42,20 +42,22 @@
             <td class="actions">
                 <div class="form-rapide">
                     {% if chambre.etat == 'libre' %}
-                    <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button" style="width: 100%;">Réserver</a>
-                    <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}">
-                        <input type="text" name="client" placeholder="Nom" required>
-                        <div class="time-row">
-                            <input type="time" name="heure_debut" required min="06:00" max="23:59">
-                            <input type="time" name="heure_fin" required min="06:00" max="23:59">
-                        </div>
-                        <button type="submit">OK</button>
-                    </form>
+                    <div class="form-block">
+                        <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button" style="width: 100%;">Réserver</a>
+                        <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}">
+                            <input type="text" name="client" placeholder="Nom" required>
+                            <div class="time-row">
+                                <input type="time" name="heure_debut" required min="06:00" max="23:59">
+                                <input type="time" name="heure_fin" required min="06:00" max="23:59">
+                            </div>
+                            <button type="submit">OK</button>
+                        </form>
+                    </div>
                     {% else %}
-                    <div class="action-row">
-                        <button class="action-button" onclick="afficherDetails({{ chambre.id }})">Détails</button>
+                    <div class="action-row full-width">
+                        <button class="action-button" style="margin-right:auto;" onclick="afficherDetails({{ chambre.id }})">Détails</button>
                         <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
-                            <button type="submit" class="action-button liberer-button" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
+                            <button type="submit" class="action-button liberer-button" style="margin-left:auto;" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
                         </form>
                     </div>
                     {% endif %}

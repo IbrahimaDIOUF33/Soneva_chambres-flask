@@ -45,6 +45,11 @@ th {
     margin-top: 6px;
 }
 
+.form-rapide .form-block,
+.form-rapide .full-width {
+    width: 100%;
+}
+
 .form-rapide .action-row {
     display: flex;
     justify-content: space-between;
