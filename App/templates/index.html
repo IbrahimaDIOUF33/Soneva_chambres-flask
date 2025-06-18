@@ -3,21 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des chambres</title>
-    <!-- Lien vers la feuille de style CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <!-- Meta pour le responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Lien vers le manifest PWA -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
-    <!-- Couleur du thème pour mobile -->
     <meta name="theme-color" content="#008080">
 </head>
 <body>
     <h1>Chambres</h1>
 
-    <!-- Affichage des messages flashés (succès ou erreur) -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
@@ -30,7 +24,6 @@
       {% endif %}
     {% endwith %}
 
-    <!-- Tableau principal des chambres -->
     <table>
         <tr>
             <th>Numéro</th>
@@ -40,58 +33,55 @@
             <th class="desktop-only">Début</th>
             <th class="desktop-only">Fin</th>
             <th class="desktop-only">Tarif</th>
-            <th class="desktop-only">Identité</th> <!-- 🆕 à ajouter -->
+            <th class="desktop-only">Identité</th>
         </tr>
         {% for chambre in chambres %}
         <tr style="background-color: {{ chambre.status_color }};">
             <td>{{ chambre.numero }}</td>
             <td>{{ chambre.etat_libelle }}</td>
             <td class="actions">
-                <!-- Bouton réserver ou modifier selon l'état -->
-                <a class="action-button" href="{{ url_for('reserver', id=chambre.id) }}">
-                    {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
-                </a>
-                <!-- Bouton pour afficher les détails (modal) -->
-                <button class="action-button" onclick="afficherDetails({{ chambre.id }})">Détails</button>
+                <div class="form-rapide">
+                    <div class="action-row">
+                        <a href="{{ url_for('reserver', id=chambre.id) }}">
+                            {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
+                        </a>
+                        <button onclick="afficherDetails({{ chambre.id }})">Détails</button>
+                    </div>
+                    {% if chambre.etat == 'libre' %}
+                    <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}">
+                        <input type="text" name="client" placeholder="Nom" required>
+                        <div class="time-row">
+                            <input type="time" name="heure_debut" required min="06:00" max="23:59">
+                            <input type="time" name="heure_fin" required min="06:00" max="23:59">
+                        </div>
+                        <button type="submit">OK</button>
+                    </form>
+                    {% endif %}
+                </div>
 
-                <!-- Formulaire pour libérer la chambre si réservée ou occupée -->
                 {% if chambre.etat in ['reservee', 'occupee'] %}
                     <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display:inline;">
                         <button type="submit" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
                     </form>
                 {% endif %}
 
-                <!-- Formulaire de réservation rapide si la chambre est libre -->
-                {% if chambre.etat == 'libre' %}
-                    <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}" class="form-rapide">
-                        <input type="text" name="client" placeholder="Nom" required>
-                        <input type="time" name="heure_debut" required min="06:00" max="23:59">
-                        <input type="time" name="heure_fin" required min="06:00" max="23:59">
-                        <button type="submit">OK</button>
-                    </form>
-                {% endif %}
-
-                <!-- Affichage du temps restant si disponible -->
                 {% if chambre.temps_restant %}
                     <div class="temps">⏳ {{ chambre.temps_restant }} restantes</div>
                 {% endif %}
 
-                <!-- Indication si la réservation est dépassée -->
                 {% if chambre.depassé %}
                     <div class="depasser">⚠️ Dépassé</div>
                 {% endif %}
             </td>
-            <!-- Colonnes affichées uniquement sur desktop -->
             <td class="desktop-only">{{ chambre.client or '—' }}</td>
             <td class="desktop-only">{{ chambre.debut_affichage }}</td>
             <td class="desktop-only">{{ chambre.fin_affichage }}</td>
             <td class="desktop-only">{{ chambre.tarif or '—' }}</td>
-            <td class="desktop-only">{{ chambre.identite or '—' }}</td> <!-- 🆕 à ajouter -->
+            <td class="desktop-only">{{ chambre.identite or '—' }}</td>
         </tr>
         {% endfor %}
     </table>
 
-    <!-- Modals pour afficher les détails de chaque chambre -->
     {% for chambre in chambres %}
     <div class="modal-carte" id="modal-{{ chambre.id }}">
         <div class="modal-content">
@@ -107,26 +97,20 @@
                 <tr><td><strong>Observations :</strong></td><td>{{ chambre.observations or '—' }}</td></tr>
             </table>
             <div style="margin-top: 10px;">
-                <!-- Bouton pour modifier la chambre -->
                 <a href="{{ url_for('reserver', id=chambre.id) }}"><button class="action-button">Modifier</button></a>
-                <!-- Bouton pour fermer la modal -->
                 <button onclick="fermerDetails({{ chambre.id }})" class="action-button">Retour</button>
             </div>
         </div>
     </div>
     {% endfor %}
 
-    <!-- Scripts JS pour gérer les modals et le rafraîchissement automatique -->
     <script>
-        // Affiche la modal de détails pour une chambre
         function afficherDetails(id) {
             document.getElementById("modal-" + id).style.display = "block";
         }
-        // Ferme la modal de détails
         function fermerDetails(id) {
             document.getElementById("modal-" + id).style.display = "none";
         }
-        // Rafraîchit la page toutes les 2 minutes
         setInterval(function() {
             window.location.reload();
         }, 120000);
