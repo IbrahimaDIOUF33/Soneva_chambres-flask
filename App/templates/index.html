@@ -47,6 +47,7 @@
                         </a>
                         <button onclick="afficherDetails({{ chambre.id }})">Détails</button>
                     </div>
+
                     {% if chambre.etat == 'libre' %}
                     <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}">
                         <input type="text" name="client" placeholder="Nom" required>
@@ -56,22 +57,22 @@
                         </div>
                         <button type="submit">OK</button>
                     </form>
+                    {% else %}
+                    <div class="action-row">
+                        <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
+                            <button type="submit" class="action-button liberer-button" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    {% if chambre.temps_restant %}
+                    <div class="temps">⏳ {{ chambre.temps_restant }} restantes</div>
+                    {% endif %}
+
+                    {% if chambre.depassé %}
+                    <div class="depasser">⚠️ Dépassé</div>
                     {% endif %}
                 </div>
-
-                {% if chambre.etat in ['reservee', 'occupee'] %}
-                    <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
-                    </form>
-                {% endif %}
-
-                {% if chambre.temps_restant %}
-                    <div class="temps">⏳ {{ chambre.temps_restant }} restantes</div>
-                {% endif %}
-
-                {% if chambre.depassé %}
-                    <div class="depasser">⚠️ Dépassé</div>
-                {% endif %}
             </td>
             <td class="desktop-only">{{ chambre.client or '—' }}</td>
             <td class="desktop-only">{{ chambre.debut_affichage }}</td>

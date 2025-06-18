@@ -25,6 +25,7 @@ th {
     font-size: 0.85em;
     color: navy;
     margin-top: 4px;
+    padding-left: 2px;
 }
 
 .depasser {
@@ -48,6 +49,7 @@ th {
     display: flex;
     justify-content: space-between;
     gap: 6px;
+    width: 100%;
 }
 
 .form-rapide .action-row a,
@@ -63,6 +65,10 @@ th {
     background-color: #008080;
     text-align: center;
     text-decoration: none;
+}
+
+.form-rapide .action-row button.liberer-button {
+    background-color: #aa3333;
 }
 
 .form-rapide .action-row a:hover,
@@ -101,6 +107,10 @@ th {
     cursor: pointer;
     margin: 2px;
     display: inline-block;
+}
+
+.action-button.liberer-button {
+    background-color: #aa3333;
 }
 
 .action-button:hover {
