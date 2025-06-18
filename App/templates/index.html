@@ -34,6 +34,8 @@
             <th class="desktop-only">Fin</th>
             <th class="desktop-only">Tarif</th>
             <th class="desktop-only">Identité</th>
+            <th class="desktop-only">Adresse</th>
+
         </tr>
         {% for chambre in chambres %}
         <tr style="background-color: {{ chambre.status_color }};">
@@ -76,6 +78,8 @@
             <td class="desktop-only">{{ chambre.fin_affichage }}</td>
             <td class="desktop-only">{{ chambre.tarif or '—' }}</td>
             <td class="desktop-only">{{ chambre.identite or '—' }}</td>
+            <td class="desktop-only">{{ chambre.adresse or '—' }}</td>
+
         </tr>
         {% endfor %}
     </table>
@@ -91,6 +95,7 @@
                 <tr><td><strong>Fin :</strong></td><td>{{ chambre.fin_affichage }}</td></tr>
                 <tr><td><strong>Tarif :</strong></td><td>{{ chambre.tarif or '—' }}</td></tr>
                 <tr><td><strong>Identité :</strong></td><td>{{ chambre.identite or '—' }}</td></tr>
+                <tr><td><strong>Adresse :</strong></td><td>{{ chambre.adresse or '—' }}</td></tr>
                 <tr><td><strong>Agent :</strong></td><td>{{ chambre.agent or '—' }}</td></tr>
                 <tr><td><strong>Observations :</strong></td><td>{{ chambre.observations or '—' }}</td></tr>
             </table>
