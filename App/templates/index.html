@@ -41,14 +41,8 @@
             <td>{{ chambre.etat_libelle }}</td>
             <td class="actions">
                 <div class="form-rapide">
-                    <div class="action-row">
-                        <a href="{{ url_for('reserver', id=chambre.id) }}">
-                            {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
-                        </a>
-                        <button onclick="afficherDetails({{ chambre.id }})">Détails</button>
-                    </div>
-
                     {% if chambre.etat == 'libre' %}
+                    <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button" style="width: 100%;">Réserver</a>
                     <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}">
                         <input type="text" name="client" placeholder="Nom" required>
                         <div class="time-row">
@@ -59,6 +53,7 @@
                     </form>
                     {% else %}
                     <div class="action-row">
+                        <button class="action-button" onclick="afficherDetails({{ chambre.id }})">Détails</button>
                         <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
                             <button type="submit" class="action-button liberer-button" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
                         </form>
