@@ -2,6 +2,7 @@ body {
     font-family: sans-serif;
     padding: 10px;
     font-size: 16px;
+    margin: 0;
 }
 
 table {
@@ -20,45 +21,6 @@ th {
     background-color: #f0f0f0;
 }
 
-.form-rapide {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
-}
-
-.form-rapide input,
-.form-rapide button {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 14px;
-    padding: 6px;
-}
-
-.form-rapide button {
-    cursor: pointer;
-}
-
-@media (min-width: 600px) {
-    .form-rapide {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .form-rapide input[type="text"] {
-        width: 130px;
-    }
-
-    .form-rapide input[type="time"] {
-        width: 60px;
-    }
-
-    .form-rapide button {
-        width: auto;
-    }
-}
-
 .temps {
     font-size: 0.85em;
     color: navy;
@@ -75,43 +37,54 @@ th {
     margin-top: 4px;
 }
 
-/* Cartes chambres (mobile) */
-.cartes-chambres {
-    display: none;
+.form-rapide {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
 }
 
-.carte-chambre {
-    margin: 12px 0;
-    padding: 10px;
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Tableau mini structuré */
-.mini-table {
+.form-rapide input,
+.form-rapide button {
     width: 100%;
-    border-collapse: collapse;
+    box-sizing: border-box;
+    font-size: 13px;
+    padding: 4px 6px;
 }
 
-.mini-table th {
-    text-align: left;
-    background-color: #f0f0f0;
-    width: 40%;
-    padding: 6px;
-    font-size: 0.95em;
+.form-rapide button {
+    cursor: pointer;
+    padding: 5px;
 }
 
-.mini-table td {
-    padding: 6px;
-    font-size: 0.95em;
+/* Modal carte chambre */
+.modal-carte {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
 }
 
-.mini-table tr:nth-child(even) td {
-    background-color: #fafafa;
+.modal-content {
+    background: white;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 95%;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Couleurs de statut (tableau) */
+.modal-content button {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+/* Couleurs de statut */
 tr[style*="lightgreen"] td { background-color: #d4f4d4 !important; }
 tr[style*="orange"] td     { background-color: #ffe6cc !important; }
 tr[style*="lightblue"] td  { background-color: #d6eaff !important; }
@@ -119,28 +92,8 @@ tr[style*="gray"] td,
 tr[style*="lightgray"] td  { background-color: #efefef !important; }
 tr[style*="red"] td        { background-color: #ffcccc !important; }
 
-/* Formulaire général */
-form input,
-form select,
-form textarea,
-form button {
-    font-size: 1em;
-    width: 100%;
-    max-width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    margin-bottom: 12px;
-}
-
-@media (max-width: 600px) {
-    form {
-        padding: 0 10px;
-    }
-}
-
-/* Responsive : affichage mobile */
+/* Masque les colonnes pour mobile */
 @media (max-width: 700px) {
-    /* Réduit les colonnes du tableau */
     td:nth-child(3),
     td:nth-child(4),
     td:nth-child(5),
@@ -152,50 +105,11 @@ form button {
         display: none;
     }
 
-    .cartes-chambres {
-        display: block;
-    }
-
     .form-rapide {
         flex-direction: column;
     }
-}
 
-/* Desktop : masque les cartes */
-@media (min-width: 701px) {
-    .cartes-chambres {
-        display: none;
+    .modal-content {
+        font-size: 1em;
     }
-}
-
-@media (max-width: 700px) {
-    .ligne-mobile {
-        display: table-row;
-    }
-
-    .details-carte {
-        background-color: #f9f9f9;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-    }
-}
-
-/* Bouton détails */
-.btn-details {
-    padding: 6px 12px;
-    background-color: #008080;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.9em;
-    cursor: pointer;
-    margin-top: 6px;
-}
-
-/* Accessibilité mobile */
-button, .btn {
-    min-height: 44px;
-    min-width: 44px;
 }

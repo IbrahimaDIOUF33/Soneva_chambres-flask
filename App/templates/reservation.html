@@ -52,15 +52,9 @@
     </style>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
     <meta name="theme-color" content="#008080">
-
-
-
-
-
 </head>
 <body>
     <h2 style="text-align: center;">Réservation - Chambre {{ chambre.numero }}</h2>
@@ -91,8 +85,23 @@
 
             <label for="etat">État :</label>
             <select name="etat" id="etat">
-                <option value="occupée" {% if chambre.etat == 'occupée' %}selected{% endif %}>Occupée</option>
-                <option value="reservée" {% if chambre.etat == 'reservée' %}selected{% endif %}>Réservée</option>
+                <option value="occupee" {% if chambre.etat == 'occupee' %}selected{% endif %}>Occupée</option>
+                <option value="reservee" {% if chambre.etat == 'reservee' %}selected{% endif %}>Réservée</option>
+            </select>
+
+            <label for="tarif">Tarif payé :</label>
+            <input type="number" name="tarif" id="tarif" value="{{ chambre.tarif or '' }}" required>
+
+            <label for="identite">N° pièce d'identité :</label>
+            <input type="text" name="identite" id="identite" value="{{ chambre.identite or '' }}">
+
+            <label for="agent">Agent :</label>
+            <select name="agent" id="agent" required>
+                <option value="">-- Sélectionnez --</option>
+                <option value="Adiouma" {% if chambre.agent == 'Adiouma' %}selected{% endif %}>Adiouma</option>
+                <option value="Aliou" {% if chambre.agent == 'Aliou' %}selected{% endif %}>Aliou</option>
+                <option value="Mariama" {% if chambre.agent == 'Mariama' %}selected{% endif %}>Mariama</option>
+                <option value="Ibrahima" {% if chambre.agent == 'Ibrahima' %}selected{% endif %}>Ibrahima</option>
             </select>
 
             <label for="observations">Observations :</label>

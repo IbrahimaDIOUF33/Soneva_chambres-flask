@@ -2,12 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2
 import psycopg2.extras
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError("❌ DATABASE_URL non défini. Ce script ne peut être lancé qu'en ligne (Render).")
-
 
 app = Flask(__name__)
 app.secret_key = "secret123"
@@ -30,7 +29,10 @@ def init_db():
         client TEXT,
         datetime_debut TEXT,
         datetime_fin TEXT,
-        observations TEXT
+        observations TEXT,
+        tarif NUMERIC,
+        identite TEXT,
+        agent TEXT
     )
     ''')
 
@@ -53,9 +55,7 @@ def get_chambres():
     now = datetime.now()
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    #cursor.execute("SELECT * FROM chambres")
     cursor.execute("SELECT * FROM chambres ORDER BY numero ASC")
-
     rows = cursor.fetchall()
     conn.close()
 
@@ -75,7 +75,6 @@ def get_chambres():
 
         if c["etat"] == "libre":
             c["status_color"] = "lightgreen"
-
         elif c["etat"] == "reservee":
             if debut and fin:
                 if fin < now:
@@ -85,7 +84,6 @@ def get_chambres():
                     c["status_color"] = "gray"
                     delta = fin - now
                     c["temps_restant"] = format_duree(delta)
-
         elif c["etat"] == "occupee":
             if debut and fin:
                 if now <= fin:
@@ -114,12 +112,16 @@ def reserver(id):
         debut = request.form['datetime_debut']
         fin = request.form['datetime_fin']
         etat = request.form['etat']
+        tarif = request.form.get('tarif') or None
+        identite = request.form.get('identite') or None
+        agent = request.form.get('agent') or None
         observations = request.form.get('observations', '')
 
         cursor.execute('''
-            UPDATE chambres SET client = %s, datetime_debut = %s, datetime_fin = %s, etat = %s, observations = %s
+            UPDATE chambres SET client = %s, datetime_debut = %s, datetime_fin = %s, etat = %s,
+                               tarif = %s, identite = %s, agent = %s, observations = %s
             WHERE id = %s
-        ''', (client, debut, fin, etat, observations, id))
+        ''', (client, debut, fin, etat, tarif, identite, agent, observations, id))
 
         conn.commit()
         conn.close()
@@ -142,7 +144,10 @@ def liberer(id):
             client = NULL,
             datetime_debut = NULL,
             datetime_fin = NULL,
-            observations = NULL
+            observations = NULL,
+            tarif = NULL,
+            identite = NULL,
+            agent = NULL
         WHERE id = %s
     ''', (id,))
 
@@ -188,7 +193,11 @@ def reservation_rapide(id):
             client = %s,
             datetime_debut = %s,
             datetime_fin = %s,
-            etat = %s
+            etat = %s,
+            tarif = NULL,
+            identite = NULL,
+            agent = NULL,
+            observations = NULL
         WHERE id = %s
     ''', (client, datetime_debut_str, datetime_fin_str, etat, id))
 

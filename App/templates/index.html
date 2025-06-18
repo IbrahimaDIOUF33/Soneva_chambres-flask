@@ -28,100 +28,74 @@
         <tr>
             <th>Numéro</th>
             <th>État</th>
-            <th>Client</th>
-            <th>Début</th>
-            <th>Fin</th>
             <th>Actions</th>
-            <th>Observations</th>
         </tr>
         {% for chambre in chambres %}
-            <tr style="background-color: {{ chambre.status_color }};">
-                <td>{{ chambre.numero }}</td>
-                <td>{{ chambre.etat_libelle }}</td>
-                <td>{{ chambre.client or '' }}</td>
-                <td>{{ chambre.debut_affichage }}</td>
-                <td>{{ chambre.fin_affichage }}</td>
-                <td>
-                    <a href="{{ url_for('reserver', id=chambre.id) }}">
-                        {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
-                    </a><br>
+        <tr style="background-color: {{ chambre.status_color }};">
+            <td>{{ chambre.numero }}</td>
+            <td>{{ chambre.etat_libelle }}</td>
+            <td>
+                <a href="{{ url_for('reserver', id=chambre.id) }}">
+                    {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
+                </a>
+                <button onclick="afficherDetails({{ chambre.id }})">Détails</button>
 
-                    {% if chambre.etat in ['reservee', 'occupee'] %}
-                        <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display:inline;">
-                            <button type="submit" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
-                        </form>
-                    {% endif %}
+                {% if chambre.etat in ['reservee', 'occupee'] %}
+                    <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
+                    </form>
+                {% endif %}
 
-                    {% if chambre.etat == 'libre' %}
-                        <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}" class="form-rapide">
-                            <input type="text" name="client" placeholder="Nom" required>
-                            <input type="time" name="heure_debut" required min="06:00" max="23:59">
-                            <input type="time" name="heure_fin" required min="06:00" max="23:59">
-                            <button type="submit">OK</button>
-                        </form>
-                    {% endif %}
-
-                    {% if chambre.temps_restant %}
-                        <div class="temps">⏳ {{ chambre.temps_restant }} restantes</div>
-                    {% endif %}
-
-                    {% if chambre.depassé %}
-                        <div class="depasser">⚠️ Dépassé</div>
-                    {% endif %}
-                </td>
-                <td>{{ chambre.observations or '' }}</td>
-            </tr>
-        {% endfor %}
-
-    </table>
-
-    <!-- Vue mobile : cartes -->
-    <div class="cartes-chambres">
-        {% for chambre in chambres %}
-        <tr class="ligne-mobile" style="background-color: {{ chambre.status_color }};">
-            <td colspan="3">
-                <strong>Chambre {{ chambre.numero }}</strong> - {{ chambre.etat_libelle }}<br>
-                Client : {{ chambre.client or '—' }}<br>
-                Début : {{ chambre.debut_affichage }}<br>
-                Fin : {{ chambre.fin_affichage }}<br>
+                {% if chambre.etat == 'libre' %}
+                    <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}" class="form-rapide">
+                        <input type="text" name="client" placeholder="Nom" required>
+                        <input type="time" name="heure_debut" required min="06:00" max="23:59">
+                        <input type="time" name="heure_fin" required min="06:00" max="23:59">
+                        <button type="submit">OK</button>
+                    </form>
+                {% endif %}
 
                 {% if chambre.temps_restant %}
-                    ⏳ {{ chambre.temps_restant }}<br>
+                    <div class="temps">⏳ {{ chambre.temps_restant }} restantes</div>
                 {% endif %}
+
                 {% if chambre.depassé %}
-                    ⚠️ Dépassé<br>
+                    <div class="depasser">⚠️ Dépassé</div>
                 {% endif %}
-
-                <button onclick="toggleDetails({{ chambre.id }})" style="margin-top: 6px;">Détails</button>
-
-                <div id="details-{{ chambre.id }}" class="details-carte" style="display:none; margin-top: 8px;">
-                    <strong>Tarif payé :</strong> {{ chambre.tarif or '—' }}<br>
-                    <strong>Pièce ID :</strong> {{ chambre.identite or '—' }}<br>
-                    <strong>Agent :</strong> {{ chambre.agent or '—' }}<br>
-                    <strong>Observations :</strong> {{ chambre.observations or '—' }}<br><br>
-
-                    <a href="{{ url_for('reserver', id=chambre.id) }}">
-                        <button>Modifier</button>
-                    </a>
-                </div>
             </td>
         </tr>
         {% endfor %}
+    </table>
+
+    {% for chambre in chambres %}
+    <div class="modal-carte" id="modal-{{ chambre.id }}">
+        <div class="modal-content">
+            <h2>Chambre {{ chambre.numero }}</h2>
+            <p><strong>État :</strong> {{ chambre.etat_libelle }}</p>
+            <p><strong>Client :</strong> {{ chambre.client or '—' }}</p>
+            <p><strong>Début :</strong> {{ chambre.debut_affichage }}</p>
+            <p><strong>Fin :</strong> {{ chambre.fin_affichage }}</p>
+            <p><strong>Tarif :</strong> {{ chambre.tarif or '—' }}</p>
+            <p><strong>Identité :</strong> {{ chambre.identite or '—' }}</p>
+            <p><strong>Agent :</strong> {{ chambre.agent or '—' }}</p>
+            <p><strong>Observations :</strong> {{ chambre.observations or '—' }}</p>
+
+            <a href="{{ url_for('reserver', id=chambre.id) }}"><button>Modifier</button></a>
+            <button onclick="fermerDetails({{ chambre.id }})">Retour</button>
+        </div>
     </div>
+    {% endfor %}
 
     <script>
+        function afficherDetails(id) {
+            document.getElementById("modal-" + id).style.display = "block";
+        }
+        function fermerDetails(id) {
+            document.getElementById("modal-" + id).style.display = "none";
+        }
         setInterval(function() {
             window.location.reload();
-        }, 60000); // recharge toutes les 60 secondes
+        }, 120000);
     </script>
-
-    <script>
-    function toggleDetails(id) {
-        const div = document.getElementById('details-' + id);
-        div.style.display = div.style.display === 'none' ? 'block' : 'none';
-    }
-    </script>
-
-
 </body>
 </html>
