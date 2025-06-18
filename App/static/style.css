@@ -1,3 +1,4 @@
+/* Style général du corps de la page */
 body {
     font-family: sans-serif;
     padding: 10px;
@@ -5,28 +6,33 @@ body {
     margin: 0;
 }
 
+/* Style général des tableaux */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
+/* Style des cellules et en-têtes de tableau */
 td, th {
     padding: 8px;
     border: 1px solid #ccc;
     text-align: left;
 }
 
+/* Style des en-têtes de tableau */
 th {
     background-color: #f0f0f0;
 }
 
+/* Style pour les éléments affichant le temps */
 .temps {
     font-size: 0.85em;
     color: navy;
     margin-top: 4px;
 }
 
+/* Style pour les éléments dépassés */
 .depasser {
     font-size: 0.85em;
     font-weight: bold;
@@ -37,6 +43,7 @@ th {
     margin-top: 4px;
 }
 
+/* Style du formulaire rapide */
 .form-rapide {
     display: flex;
     flex-direction: column;
@@ -44,6 +51,7 @@ th {
     margin-top: 6px;
 }
 
+/* Style des champs et boutons du formulaire rapide */
 .form-rapide input,
 .form-rapide button {
     width: 100%;
@@ -52,12 +60,39 @@ th {
     padding: 4px 6px;
 }
 
+/* Style spécifique au bouton du formulaire rapide */
 .form-rapide button {
     cursor: pointer;
     padding: 5px;
 }
 
-/* Modal carte chambre */
+/* Style des boutons d'action */
+.action-button {
+    background-color: #008080;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 2px;
+    display: inline-block;
+}
+
+/* Effet au survol des boutons d'action */
+.action-button:hover {
+    background-color: #006666;
+}
+
+/* Conteneur pour les boutons d'action */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: space-between;
+}
+
+/* Style de la modale (carte) */
 .modal-carte {
     display: none;
     position: fixed;
@@ -70,6 +105,7 @@ th {
     z-index: 1000;
 }
 
+/* Contenu de la modale */
 .modal-content {
     background: white;
     margin: 40px auto;
@@ -79,12 +115,25 @@ th {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Espacement des boutons dans la modale */
 .modal-content button {
     margin-right: 10px;
     margin-top: 10px;
 }
 
-/* Couleurs de statut */
+/* Style du tableau dans la carte */
+.carte-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Style des cellules du tableau de la carte */
+.carte-table td {
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Couleurs de fond conditionnelles selon le style inline sur la ligne */
 tr[style*="lightgreen"] td { background-color: #d4f4d4 !important; }
 tr[style*="orange"] td     { background-color: #ffe6cc !important; }
 tr[style*="lightblue"] td  { background-color: #d6eaff !important; }
@@ -92,17 +141,15 @@ tr[style*="gray"] td,
 tr[style*="lightgray"] td  { background-color: #efefef !important; }
 tr[style*="red"] td        { background-color: #ffcccc !important; }
 
-/* Masque les colonnes pour mobile */
+/* Affichage réservé au bureau (masqué sur mobile) */
+.desktop-only {
+    display: table-cell;
+}
+
+/* Styles responsives pour les petits écrans */
 @media (max-width: 700px) {
-    td:nth-child(3),
-    td:nth-child(4),
-    td:nth-child(5),
-    td:nth-child(7),
-    th:nth-child(3),
-    th:nth-child(4),
-    th:nth-child(5),
-    th:nth-child(7) {
-        display: none;
+    .desktop-only {
+        display: none !important;
     }
 
     .form-rapide {
