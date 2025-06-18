@@ -112,7 +112,14 @@ def reserver(id):
         debut = request.form['datetime_debut']
         fin = request.form['datetime_fin']
         etat = request.form['etat']
-        tarif = request.form.get('tarif') or None
+
+        tarif_str = request.form.get('tarif')
+        try:
+            tarif = float(tarif_str.replace(',', '.')) if tarif_str else None
+        except ValueError:
+            flash("❌ Tarif invalide. Utilisez un nombre, par exemple 15000 ou 15000.00")
+            return redirect(url_for('reserver', id=id))
+
         identite = request.form.get('identite') or None
         agent = request.form.get('agent') or None
         observations = request.form.get('observations', '')
