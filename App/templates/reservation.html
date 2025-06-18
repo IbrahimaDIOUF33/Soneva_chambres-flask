@@ -93,6 +93,9 @@
             <label for="identite">N° pièce d'identité :</label>
             <input type="text" name="identite" id="identite" value="{{ chambre.identite or '' }}">
 
+            <label for="adresse">Adresse (ville) :</label>
+            <input type="text" name="adresse" id="adresse" value="{{ chambre.adresse or '' }}">
+                    
             <label for="agent">Agent :</label>
             <select name="agent" id="agent" required>
                 <option value="">-- Sélectionnez --</option>

@@ -134,14 +134,15 @@ def reserver(id):
             return redirect(url_for('reserver', id=id))
 
         identite = request.form.get('identite') or None
+        adresse = request.form.get('adresse') or None
         agent = request.form.get('agent') or None
         observations = request.form.get('observations', '')
 
         cursor.execute('''
             UPDATE chambres SET client = %s, datetime_debut = %s, datetime_fin = %s, etat = %s,
-                               tarif = %s, identite = %s, agent = %s, observations = %s
+                               tarif = %s, identite = %s, adresse = %s, agent = %s, observations = %s
             WHERE id = %s
-        ''', (client, debut, fin, etat, tarif, identite, agent, observations, id))
+        ''', (client, debut, fin, etat, tarif, identite, adresse, agent, observations, id))
 
         conn.commit()
         conn.close()
@@ -158,6 +159,19 @@ def liberer(id):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
 
+    # 📝 Sauvegarder l’état de la chambre dans historique
+    cursor.execute('''
+        INSERT INTO historique (
+            chambre_numero, client, datetime_debut, datetime_fin,
+            tarif, identite, agent, observations, adresse
+        )
+        SELECT numero, client, datetime_debut, datetime_fin,
+               tarif, identite, agent, observations, adresse
+        FROM chambres
+        WHERE id = %s
+    ''', (id,))
+
+    # 🔄 Libérer la chambre (remise à zéro)
     cursor.execute('''
         UPDATE chambres SET
             etat = 'libre',
@@ -167,6 +181,7 @@ def liberer(id):
             observations = NULL,
             tarif = NULL,
             identite = NULL,
+            adresse = NULL,
             agent = NULL
         WHERE id = %s
     ''', (id,))
@@ -209,6 +224,7 @@ def reservation_rapide(id):
     cursor = conn.cursor()
 
     cursor.execute('''
+                   
         UPDATE chambres SET
             client = %s,
             datetime_debut = %s,
@@ -216,6 +232,7 @@ def reservation_rapide(id):
             etat = %s,
             tarif = NULL,
             identite = NULL,
+            adresse = NULL,
             agent = NULL,
             observations = NULL
         WHERE id = %s
