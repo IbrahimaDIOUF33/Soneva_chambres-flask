@@ -21,29 +21,42 @@ def init_db():
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
 
+    # Création de la table (sans les colonnes supplémentaires ici)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS chambres (
         id SERIAL PRIMARY KEY,
-        numero TEXT NOT NULL,
+        numero TEXT NOT NULL UNIQUE,
         etat TEXT CHECK(etat IN ('libre', 'reservee', 'occupee')) NOT NULL DEFAULT 'libre',
         client TEXT,
         datetime_debut TEXT,
         datetime_fin TEXT,
-        observations TEXT,
-        tarif NUMERIC,
-        identite TEXT,
-        agent TEXT
+        observations TEXT
     )
     ''')
 
-    cursor.execute("SELECT COUNT(*) FROM chambres")
-    count = cursor.fetchone()[0]
-    if count == 0:
-        for i in range(1, 11):
-            cursor.execute("INSERT INTO chambres (numero, etat) VALUES (%s, 'libre')", (f"{100+i}",))
+    # Ajout conditionnel des colonnes manquantes
+    cursor.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'chambres'")
+    existing_columns = [col[0] for col in cursor.fetchall()]
+
+    if 'tarif' not in existing_columns:
+        cursor.execute("ALTER TABLE chambres ADD COLUMN tarif NUMERIC;")
+    if 'identite' not in existing_columns:
+        cursor.execute("ALTER TABLE chambres ADD COLUMN identite TEXT;")
+    if 'agent' not in existing_columns:
+        cursor.execute("ALTER TABLE chambres ADD COLUMN agent TEXT;")
+
+    # Insertion de chambres 100 à 109 si elles n'existent pas
+    for i in range(1, 11):
+        cursor.execute("""
+            INSERT INTO chambres (numero, etat)
+            VALUES (%s, 'libre')
+            ON CONFLICT (numero) DO NOTHING
+        """, (f"{100+i}",))
 
     conn.commit()
     conn.close()
+
+
 
 def format_duree(delta):
     total_seconds = int(delta.total_seconds())
