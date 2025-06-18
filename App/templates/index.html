@@ -33,6 +33,7 @@
             <th class="desktop-only">Début</th>
             <th class="desktop-only">Fin</th>
             <th class="desktop-only">Tarif</th>
+            <th class="desktop-only">Identité</th> <!-- 🆕 à ajouter -->
         </tr>
         {% for chambre in chambres %}
         <tr style="background-color: {{ chambre.status_color }};">
@@ -71,6 +72,7 @@
             <td class="desktop-only">{{ chambre.debut_affichage }}</td>
             <td class="desktop-only">{{ chambre.fin_affichage }}</td>
             <td class="desktop-only">{{ chambre.tarif or '—' }}</td>
+            <td class="desktop-only">{{ chambre.identite or '—' }}</td> <!-- 🆕 à ajouter -->
         </tr>
         {% endfor %}
     </table>
