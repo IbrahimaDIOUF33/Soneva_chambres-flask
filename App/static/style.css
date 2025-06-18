@@ -43,6 +43,7 @@ th {
     flex-direction: column;
     gap: 6px;
     margin-top: 6px;
+    width: 100%;
 }
 
 .form-rapide .form-block,
@@ -70,6 +71,7 @@ th {
     background-color: #008080;
     text-align: center;
     text-decoration: none;
+    width: 100%;
 }
 
 .form-rapide .action-row button.liberer-button {
@@ -85,6 +87,7 @@ th {
     display: flex;
     justify-content: space-between;
     gap: 6px;
+    width: 100%;
 }
 
 .form-rapide .time-row input[type="time"] {
@@ -112,6 +115,8 @@ th {
     cursor: pointer;
     margin: 2px;
     display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .action-button.liberer-button {
