@@ -173,7 +173,7 @@ def reservation_rapide(id):
         return redirect(url_for('index'))
 
     now = datetime.now()
-    delay = (datetime_debut - now).total_seconds() / 60  # minutes
+    delay = (datetime_debut - now).total_seconds() / 60
     etat = "occupee" if delay <= 30 else "reservee"
 
     heure_min = datetime.strptime("06:00", "%H:%M").time()

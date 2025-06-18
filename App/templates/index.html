@@ -29,16 +29,20 @@
             <th>Numéro</th>
             <th>État</th>
             <th>Actions</th>
+            <th class="desktop-only">Client</th>
+            <th class="desktop-only">Début</th>
+            <th class="desktop-only">Fin</th>
+            <th class="desktop-only">Tarif</th>
         </tr>
         {% for chambre in chambres %}
         <tr style="background-color: {{ chambre.status_color }};">
             <td>{{ chambre.numero }}</td>
             <td>{{ chambre.etat_libelle }}</td>
-            <td>
-                <a href="{{ url_for('reserver', id=chambre.id) }}">
+            <td class="actions">
+                <a class="action-button" href="{{ url_for('reserver', id=chambre.id) }}">
                     {% if chambre.etat == 'libre' %}Réserver{% else %}Modifier{% endif %}
                 </a>
-                <button onclick="afficherDetails({{ chambre.id }})">Détails</button>
+                <button class="action-button" onclick="afficherDetails({{ chambre.id }})">Détails</button>
 
                 {% if chambre.etat in ['reservee', 'occupee'] %}
                     <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display:inline;">
@@ -63,6 +67,10 @@
                     <div class="depasser">⚠️ Dépassé</div>
                 {% endif %}
             </td>
+            <td class="desktop-only">{{ chambre.client or '—' }}</td>
+            <td class="desktop-only">{{ chambre.debut_affichage }}</td>
+            <td class="desktop-only">{{ chambre.fin_affichage }}</td>
+            <td class="desktop-only">{{ chambre.tarif or '—' }}</td>
         </tr>
         {% endfor %}
     </table>
@@ -71,17 +79,20 @@
     <div class="modal-carte" id="modal-{{ chambre.id }}">
         <div class="modal-content">
             <h2>Chambre {{ chambre.numero }}</h2>
-            <p><strong>État :</strong> {{ chambre.etat_libelle }}</p>
-            <p><strong>Client :</strong> {{ chambre.client or '—' }}</p>
-            <p><strong>Début :</strong> {{ chambre.debut_affichage }}</p>
-            <p><strong>Fin :</strong> {{ chambre.fin_affichage }}</p>
-            <p><strong>Tarif :</strong> {{ chambre.tarif or '—' }}</p>
-            <p><strong>Identité :</strong> {{ chambre.identite or '—' }}</p>
-            <p><strong>Agent :</strong> {{ chambre.agent or '—' }}</p>
-            <p><strong>Observations :</strong> {{ chambre.observations or '—' }}</p>
-
-            <a href="{{ url_for('reserver', id=chambre.id) }}"><button>Modifier</button></a>
-            <button onclick="fermerDetails({{ chambre.id }})">Retour</button>
+            <table class="carte-table">
+                <tr><td><strong>État :</strong></td><td>{{ chambre.etat_libelle }}</td></tr>
+                <tr><td><strong>Client :</strong></td><td>{{ chambre.client or '—' }}</td></tr>
+                <tr><td><strong>Début :</strong></td><td>{{ chambre.debut_affichage }}</td></tr>
+                <tr><td><strong>Fin :</strong></td><td>{{ chambre.fin_affichage }}</td></tr>
+                <tr><td><strong>Tarif :</strong></td><td>{{ chambre.tarif or '—' }}</td></tr>
+                <tr><td><strong>Identité :</strong></td><td>{{ chambre.identite or '—' }}</td></tr>
+                <tr><td><strong>Agent :</strong></td><td>{{ chambre.agent or '—' }}</td></tr>
+                <tr><td><strong>Observations :</strong></td><td>{{ chambre.observations or '—' }}</td></tr>
+            </table>
+            <div style="margin-top: 10px;">
+                <a href="{{ url_for('reserver', id=chambre.id) }}"><button class="action-button">Modifier</button></a>
+                <button onclick="fermerDetails({{ chambre.id }})" class="action-button">Retour</button>
+            </div>
         </div>
     </div>
     {% endfor %}

@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Réserver la chambre {{ chambre.numero }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+    <meta name="theme-color" content="#008080">
 
     <style>
         .form-container {
@@ -50,16 +54,10 @@
             }
         }
     </style>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <link rel="icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
-    <meta name="theme-color" content="#008080">
 </head>
 <body>
     <h2 style="text-align: center;">Réservation - Chambre {{ chambre.numero }}</h2>
 
-    <!-- Messages flash -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
@@ -108,7 +106,7 @@
             <textarea name="observations" id="observations" rows="3">{{ chambre.observations or '' }}</textarea>
 
             <button type="submit">Enregistrer</button>
-            <a href="{{ url_for('index') }}">Annuler</a>
+            <a href="{{ url_for('index') }}" style="display:inline-block;padding:10px 20px;background:#ccc;color:#000;text-align:center;border-radius:4px;text-decoration:none;">Annuler</a>
         </form>
     </div>
 </body>
