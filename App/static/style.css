@@ -212,4 +212,15 @@ tr[style*="red"] td        { background-color: #ffcccc !important; }
     .modal-content {
         font-size: 1em;
     }
+
+
+    input[type="datetime-local"],
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 1em;
+    }
+
 }
