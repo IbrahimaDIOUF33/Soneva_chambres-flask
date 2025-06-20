@@ -1,64 +1,32 @@
-/* Style général du corps de la page */
 body {
     font-family: sans-serif;
     padding: 10px;
     font-size: 16px;
     margin: 0;
-    overflow-x: hidden; /*  empêche le débordement horizontal --> Voir s'il ne risque pas de couper le contenu */
 }
 
-/* Barre de navigation principale */
-.navbar {
-    background-color: #008080;
-    padding: 8px;
-    display: flex;
-    gap: 12px;
-    font-size: 16px;
-}
-
-/* Liens dans la navbar */
-.navbar a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* Effet au survol des liens navbar */
-.navbar a:hover {
-    text-decoration: underline;
-}
-
-/* Tableaux généraux */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-
-    table-layout: fixed; /* force les colonnes à se répartir */
-    word-wrap: break-word;
 }
 
-/* Cellules et en-têtes de tableau */
 td, th {
     padding: 8px;
     border: 1px solid #ccc;
     text-align: left;
 }
 
-/* En-têtes de tableau */
 th {
     background-color: #f0f0f0;
 }
 
-/* Affichage du temps */
 .temps {
     font-size: 0.85em;
     color: navy;
     margin-top: 4px;
-    padding-left: 2px;
 }
 
-/* Affichage pour dépassement */
 .depasser {
     font-size: 0.85em;
     font-weight: bold;
@@ -69,116 +37,27 @@ th {
     margin-top: 4px;
 }
 
-/* Formulaire rapide principal */
 .form-rapide {
     display: flex;
     flex-direction: column;
     gap: 4px;
     margin-top: 6px;
-    width: 100%;
 }
 
-/* Blocs du formulaire rapide */
-.form-rapide .form-block,
-.form-rapide .full-width {
+.form-rapide input,
+.form-rapide button {
     width: 100%;
-}
-
-/* Ligne d'actions dans le formulaire rapide */
-.form-rapide .action-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-}
-
-/* Boutons et liens dans la ligne d'actions */
-.form-rapide .action-row a,
-.form-rapide .action-row button {
-    flex: 1;
     box-sizing: border-box;
     font-size: 13px;
     padding: 4px 6px;
-    border-radius: 4px;
-    border: none;
+}
+
+.form-rapide button {
     cursor: pointer;
-    color: white;
-    background-color: #008080;
-    text-align: center;
-    text-decoration: none;
-    width: 100%;
+    padding: 5px;
 }
 
-/* Bouton spécifique "libérer" dans la ligne d'actions */
-.form-rapide .action-row button.liberer-button {
-    background-color: #aa3333;
-}
-
-/* Effet au survol des boutons/links dans la ligne d'actions */
-.form-rapide .action-row a:hover,
-.form-rapide .action-row button:hover {
-    background-color: #006666;
-}
-
-/* Ligne de saisie d'heure dans le formulaire rapide */
-.form-rapide .time-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-}
-
-/* Champ de saisie d'heure */
-.form-rapide .time-row input[type="time"] {
-    flex: 1;
-    font-size: 13px;
-    padding: 4px 6px;
-    box-sizing: border-box;
-}
-
-/* Champs texte et bouton submit du formulaire rapide */
-.form-rapide input[type="text"],
-.form-rapide button[type="submit"] {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 13px;
-    padding: 4px 6px;
-}
-
-/* Boutons d'action généraux */
-.action-button {
-    background-color: #008080;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    margin: 2px;
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Bouton d'action "libérer" */
-.action-button.liberer-button {
-    background-color: #aa3333;
-}
-
-/* Effet au survol des boutons d'action */
-.action-button:hover {
-    background-color: #006666;
-}
-
-/* Conteneur des actions (boutons, liens, etc.) */
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: space-between;
-}
-
-/* Fenêtre modale pour la carte */
+/* Modal carte chambre */
 .modal-carte {
     display: none;
     position: fixed;
@@ -191,7 +70,6 @@ th {
     z-index: 1000;
 }
 
-/* Contenu de la fenêtre modale */
 .modal-content {
     background: white;
     margin: 40px auto;
@@ -201,25 +79,12 @@ th {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Boutons dans la modale */
 .modal-content button {
     margin-right: 10px;
     margin-top: 10px;
 }
 
-/* Tableau spécifique à la carte */
-.carte-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* Cellules du tableau carte */
-.carte-table td {
-    padding: 6px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Coloration conditionnelle des lignes de tableau selon le style inline */
+/* Couleurs de statut */
 tr[style*="lightgreen"] td { background-color: #d4f4d4 !important; }
 tr[style*="orange"] td     { background-color: #ffe6cc !important; }
 tr[style*="lightblue"] td  { background-color: #d6eaff !important; }
@@ -227,35 +92,24 @@ tr[style*="gray"] td,
 tr[style*="lightgray"] td  { background-color: #efefef !important; }
 tr[style*="red"] td        { background-color: #ffcccc !important; }
 
-/* Colonnes affichées uniquement sur desktop */
-.desktop-only {
-    display: table-cell;
-}
-
-/* Responsive : adaptation pour les petits écrans */
+/* Masque les colonnes pour mobile */
 @media (max-width: 700px) {
-    .desktop-only {
-        display: none !important;
+    td:nth-child(3),
+    td:nth-child(4),
+    td:nth-child(5),
+    td:nth-child(7),
+    th:nth-child(3),
+    th:nth-child(4),
+    th:nth-child(5),
+    th:nth-child(7) {
+        display: none;
     }
 
     .form-rapide {
-        display: flex;
         flex-direction: column;
-        gap: 4px;
-        max-width: 100%;       /* empêche le débordement */
-        overflow-x: auto;
-        padding: 0 4px;
-    }
-
-    .form-rapide input,
-    .form-rapide button {
-        font-size: 14px;
-        width: 100%;           /* force à rester dans la cellule */
-        box-sizing: border-box;
     }
 
     .modal-content {
         font-size: 1em;
     }
 }
-
