@@ -201,19 +201,50 @@ tr[style*="red"] td        { background-color: #ffcccc !important; }
 }
 
 @media (max-width: 700px) {
+    /* Masquer les colonnes secondaires */
     .desktop-only {
         display: none !important;
     }
 
+    /* Fixer le layout du tableau */
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    /* Proportions stables pour les 3 colonnes visibles */
+    th:nth-child(1), td:nth-child(1) {
+        width: 15%;  /* Numéro */
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+        width: 20%;  /* État */
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+        width: 65%;  /* Actions */
+    }
+
+    /* Forcer les champs à ne pas dépasser */
     .form-rapide {
         flex-direction: column;
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .form-rapide input,
+    .form-rapide button {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 13px;
+        padding: 4px 6px;
     }
 
     .modal-content {
         font-size: 1em;
     }
 
-
+    /* Champs des formulaires classiques (réservation) */
     input[type="datetime-local"],
     input[type="text"],
     select,
@@ -222,5 +253,5 @@ tr[style*="red"] td        { background-color: #ffcccc !important; }
         box-sizing: border-box;
         font-size: 1em;
     }
-
 }
+
