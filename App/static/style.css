@@ -22,26 +22,6 @@ th {
     background-color: #f0f0f0;
 }
 
-.form-rapide {
-    width: 100%;
-    max-width: 100%;
-    display: block;
-}
-
-.form-rapide input[type="text"],
-.form-rapide input[type="time"],
-.form-rapide button[type="submit"] {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 13px;
-    padding: 4px 6px;
-}
-
-.time-row {
-    display: flex;
-    gap: 6px;
-}
-
 .action-button {
     background-color: #008080;
     color: white;
@@ -84,17 +64,6 @@ th {
     th:nth-child(1), td:nth-child(1) { width: 15%; }  /* Numéro */
     th:nth-child(2), td:nth-child(2) { width: 20%; }  /* État */
     th:nth-child(3), td:nth-child(3) { width: 65%; }  /* Actions */
-
-    .form-rapide input[type="text"],
-    .form-rapide input[type="time"],
-    .form-rapide button[type="submit"] {
-        font-size: 12px;
-    }
-
-    .time-row {
-        flex-direction: column;
-        gap: 4px;
-    }
 
     .col-actions {
         padding: 0;
