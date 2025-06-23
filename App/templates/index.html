@@ -24,14 +24,6 @@
                     {% if chambre.etat == 'libre' %}
                     <div class="form-block">
                         <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button">Réserver</a>
-                        <form method="POST" action="{{ url_for('reservation_rapide', id=chambre.id) }}">
-                            <input type="text" name="client" placeholder="Nom" required>
-                            <div class="time-row">
-                                <input type="time" name="heure_debut" required min="06:00" max="23:59">
-                                <input type="time" name="heure_fin" required min="06:00" max="23:59">
-                            </div>
-                            <button type="submit" class="action-button">OK</button>
-                        </form>
                     </div>
                     {% else %}
                     <div class="action-row full-width">

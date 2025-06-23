@@ -37,10 +37,6 @@ th {
     padding: 4px 6px;
 }
 
-.time-row {
-    display: flex;
-    gap: 6px;
-}
 
 .action-button {
     background-color: #008080;
@@ -91,10 +87,7 @@ th {
         font-size: 12px;
     }
 
-    .time-row {
-        flex-direction: column;
-        gap: 4px;
-    }
+
 
     .col-actions {
         padding: 0;
