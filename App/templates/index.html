@@ -26,8 +26,11 @@
                 </div>
                 {% else %}
                 <div class="action-row full-width">
+                    {% if chambre.temps_restant %}
+                    <p>Temps restant : {{ chambre.temps_restant }}</p>
+                    {% endif %}
                     <button class="action-button" onclick="afficherDetails({{ chambre.id }})">Détails</button>
-                    <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}">
+                    <form method="POST" action="{{ url_for('liberer', id=chambre.id) }}" style="display: inline;">
                         <button type="submit" class="action-button liberer-button" onclick="return confirm('Libérer cette chambre ?')">Libérer</button>
                     </form>
                 </div>
