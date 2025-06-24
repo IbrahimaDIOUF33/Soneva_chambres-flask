@@ -102,28 +102,6 @@ th {
     background-color: #006666;
 }
 
-.form-rapide .time-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-}
-
-.form-rapide .time-row input[type="time"] {
-    flex: 1;
-    font-size: 13px;
-    padding: 4px 6px;
-    box-sizing: border-box;
-}
-
-.form-rapide input[type="text"],
-.form-rapide button[type="submit"] {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 13px;
-    padding: 4px 6px;
-}
-
 .action-button {
     background-color: #008080;
     color: white;
