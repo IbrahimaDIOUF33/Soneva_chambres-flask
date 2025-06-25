@@ -77,10 +77,9 @@
             <p style="font-size: 0.9em; color: #555;">Photo prise à l'arrivée</p>
         </div>
     {% endif %}
-   
 
     <div class="form-container">
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <label for="client">Nom du client :</label>
             <input type="text" name="client" id="client" value="{{ chambre.client or '' }}" required>
 
@@ -119,9 +118,24 @@
             <label for="observations">Observations :</label>
             <textarea name="observations" id="observations" rows="3">{{ chambre.observations or '' }}</textarea>
 
+            <label for="photo_client">Photo du client :</label>
+            <input type="file" name="photo_client" id="photo_client" accept="image/*" capture="environment">
+            <img id="preview" style="max-width: 100%; margin-top: 10px; display: none; border-radius: 8px;">
+
             <button type="submit">Enregistrer</button>
             <a href="{{ url_for('index') }}" style="display:inline-block;padding:10px 20px;background:#ccc;color:#000;text-align:center;border-radius:4px;text-decoration:none;">Annuler</a>
         </form>
     </div>
+
+    <script>
+    document.getElementById('photo_client').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const img = document.getElementById('preview');
+            img.src = URL.createObjectURL(file);
+            img.style.display = 'block';
+        }
+    });
+    </script>
 </body>
 </html>
