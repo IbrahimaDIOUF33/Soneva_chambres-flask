@@ -40,7 +40,6 @@
             <th class="desktop-only">Tarif</th>
             <th class="desktop-only">Identité</th>
             <th class="desktop-only">Adresse</th>
-
         </tr>
         {% for chambre in chambres %}
         <tr style="background-color: {{ chambre.status_color }};">
@@ -51,6 +50,7 @@
                     {% if chambre.etat == 'libre' %}
                     <div class="form-block">
                         <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button" style="width: 100%;">Réserver</a>
+                        <button class="action-button" onclick="ouvrirCamera({{ chambre.id }})">📸</button>
                     </div>
                     {% else %}
                     <div class="action-row full-width">
@@ -76,7 +76,6 @@
             <td class="desktop-only">{{ chambre.tarif or '—' }}</td>
             <td class="desktop-only">{{ chambre.identite or '—' }}</td>
             <td class="desktop-only">{{ chambre.adresse or '—' }}</td>
-
         </tr>
         {% endfor %}
     </table>
@@ -104,6 +103,19 @@
     </div>
     {% endfor %}
 
+    <!-- Modal Caméra globale -->
+    <div id="modal-camera" class="modal-carte" style="display:none;">
+        <div class="modal-content">
+            <h3>Capturer la photo du client</h3>
+            <video id="camera" width="100%" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <div style="margin-top: 10px;">
+                <button onclick="capturerPhoto()" class="action-button">Capturer</button>
+                <button onclick="fermerCamera()" class="action-button">Annuler</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function afficherDetails(id) {
             document.getElementById("modal-" + id).style.display = "block";
@@ -111,74 +123,51 @@
         function fermerDetails(id) {
             document.getElementById("modal-" + id).style.display = "none";
         }
+
+        let chambreEnCours = null;
+        let stream = null;
+
+        function ouvrirCamera(chambreId) {
+            chambreEnCours = chambreId;
+            document.getElementById("modal-camera").style.display = "block";
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(s => {
+                    stream = s;
+                    document.getElementById("camera").srcObject = stream;
+                })
+                .catch(err => alert("Erreur accès caméra"));
+        }
+
+        function fermerCamera() {
+            document.getElementById("modal-camera").style.display = "none";
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+            }
+        }
+
+        function capturerPhoto() {
+            let video = document.getElementById("camera");
+            let canvas = document.getElementById("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            let imageData = canvas.toDataURL("image/png");
+
+            fetch(`/enregistrer_photo/${chambreEnCours}`, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            }).then(resp => {
+                if (resp.ok) alert("Photo enregistrée ✅");
+                else alert("Erreur lors de l'envoi");
+                fermerCamera();
+            });
+        }
+
         setInterval(function() {
             window.location.reload();
         }, 120000);
     </script>
-
-    <!-- 1. Bouton Caméra dans le tableau -->
-    {% if chambre.etat == 'libre' %}
-    <div class="form-block">
-        <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button">Réserver</a>
-        <button class="action-button" onclick="ouvrirCamera({{ chambre.id }})">📸</button>
-    </div>
-    {% endif %}
-
-    <!-- 2. Modal Caméra globale -->
-    <div id="modal-camera" class="modal-carte" style="display:none;">
-    <div class="modal-content">
-        <h3>Capturer la photo du client</h3>
-        <video id="camera" width="100%" autoplay></video>
-        <canvas id="canvas" style="display:none;"></canvas>
-        <div style="margin-top: 10px;">
-            <button onclick="capturerPhoto()" class="action-button">Capturer</button>
-            <button onclick="fermerCamera()" class="action-button">Annuler</button>
-        </div>
-    </div>
-    </div>
-
-    <script>
-    let chambreEnCours = null;
-    let stream = null;
-
-    function ouvrirCamera(chambreId) {
-    chambreEnCours = chambreId;
-    document.getElementById("modal-camera").style.display = "block";
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(s => {
-        stream = s;
-        document.getElementById("camera").srcObject = stream;
-        })
-        .catch(err => alert("Erreur accès caméra"));
-    }
-
-    function fermerCamera() {
-    document.getElementById("modal-camera").style.display = "none";
-    if (stream) {
-        stream.getTracks().forEach(t => t.stop());
-    }
-    }
-
-    function capturerPhoto() {
-    let video = document.getElementById("camera");
-    let canvas = document.getElementById("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    let imageData = canvas.toDataURL("image/png");
-
-    fetch(`/enregistrer_photo/${chambreEnCours}`, {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: imageData })
-    }).then(resp => {
-        if (resp.ok) alert("Photo enregistrée ✅");
-        else alert("Erreur lors de l'envoi");
-        fermerCamera();
-    });
-    }
-    </script>
-
 </body>
 <!-- Force update Render -->
 </html>
