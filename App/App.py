@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2
 import psycopg2.extras
-import os
+import os, base64
 from datetime import datetime
+
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
@@ -252,6 +253,22 @@ def historique():
     historiques = cursor.fetchall()
     conn.close()
     return render_template("historique.html", historiques=historiques)
+
+
+@app.route('/enregistrer_photo/<int:id>', methods=['POST'])
+def enregistrer_photo(id):
+    data = request.get_json()
+    image_b64 = data['image'].split(',')[1]
+    image_data = base64.b64decode(image_b64)
+
+    dossier = os.path.join('App', 'static', 'photos')
+    os.makedirs(dossier, exist_ok=True)
+
+    chemin = os.path.join(dossier, f'chambre_{id}.png')
+    with open(chemin, 'wb') as f:
+        f.write(image_data)
+
+    return '', 204  # No Content
 
 
 if __name__ == '__main__':
