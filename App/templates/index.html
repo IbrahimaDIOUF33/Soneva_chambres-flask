@@ -48,8 +48,8 @@
             <td class="actions">
                 <div class="form-rapide">
                     {% if chambre.etat == 'libre' %}
-                    <div class="form-block">
-                        <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button" style="width: 100%;">Réserver</a>
+                    <div class="action-row full-width">
+                        <a href="{{ url_for('reserver', id=chambre.id) }}" class="action-button">Réserver</a>
                         <button class="action-button" onclick="ouvrirCamera({{ chambre.id }})">📸</button>
                     </div>
                     {% else %}
@@ -130,7 +130,8 @@
         function ouvrirCamera(chambreId) {
             chambreEnCours = chambreId;
             document.getElementById("modal-camera").style.display = "block";
-            navigator.mediaDevices.getUserMedia({ video: true })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })
+
                 .then(s => {
                     stream = s;
                     document.getElementById("camera").srcObject = stream;
